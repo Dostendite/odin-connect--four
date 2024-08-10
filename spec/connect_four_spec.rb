@@ -1,14 +1,5 @@
 require_relative "../lib/connect_four"
 require_relative "../lib/cell"
-# Since this is probably your first experience with TDD, let's extend the
-# workflow to include a few more steps:
-# 1. Read & understand the requirement for one method only.
-# 2. Write one test for that method; run the tests to see it fail.
-# 3. Write the method to fulfill the requirement.
-# 4. Run the tests again. If they don't all pass, redo steps 1-3.
-# 5. When your first test is passing, write the additional tests.
-# 6. Run all of the tests. If any do not pass, redo steps 3-5.
-# 7. Optional: Refactor your code and/or tests, keeping all tests passing.
 
 def get_nested_array_length(ary)
   counter = 0
@@ -53,6 +44,49 @@ RSpec.describe ConnectFour do
       game_board_length = get_nested_array_length(game_board)
 
       expect(game_board_length).to eq(42)
+    end
+  end
+
+  describe "#out_of_bounds?" do
+    subject(:connect_four) { described_class.new }
+
+    context "when the row or column are below 1" do
+      it "returns true when the row is below 1" do
+        target_row = 0
+        target_column = 5
+        bounds_test = connect_four.out_of_bounds?(target_row, target_column)
+        expect(bounds_test).to be true
+      end
+
+      it "returns true when the column is below 1" do
+        target_row = 3
+        target_column = -2
+        bounds_test = connect_four.out_of_bounds?(target_row, target_column)
+        expect(bounds_test).to be true
+      end
+
+      it "returns true when both are below 1" do
+        target_row = -5
+        target_column = -2
+        bounds_test = connect_four.out_of_bounds?(target_row, target_column)
+        expect(bounds_test).to be true
+      end
+    end
+
+    context "when the row or column are positive" do
+      it "returns true when row is higher than 6" do
+        target_row = 7
+        target_column = 3
+        bounds_test = connect_four.out_of_bounds?(target_row, target_column)
+        expect(bounds_test).to be true
+      end
+
+      it "returns true when column is higher than 7" do
+        target_row = 5
+        target_column = 8
+        bounds_test = connect_four.out_of_bounds?(target_row, target_column)
+        expect(bounds_test).to be true
+      end
     end
   end
 end
