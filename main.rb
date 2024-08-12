@@ -14,12 +14,14 @@ require_relative "lib/connect_four"
 # 7. Optional: Refactor your code and/or tests, keeping all tests passing.
 
 connect_four = ConnectFour.new
-connect_four.drop_cell(connect_four.create_cell("blue"), 5)
-connect_four.drop_cell(connect_four.create_cell("orange"), 5)
-connect_four.drop_cell(connect_four.create_cell("orange"), 5)
-connect_four.drop_cell(connect_four.create_cell("orange"), 5)
-connect_four.drop_cell(connect_four.create_cell("orange"), 5)
-connect_four.drop_cell(connect_four.create_cell("orange"), 5)
+cell = connect_four.create_cell("orange")
+connect_four.play_turn(cell, 1)
+connect_four.play_turn(cell, 2)
+center_cell = connect_four.create_cell("orange")
+connect_four.play_turn(center_cell, 3)
+connect_four.play_turn(cell, 4)
 
+winner = connect_four.check_four_horizontal
+puts "winner is #{winner}"
 
 connect_four.print_board

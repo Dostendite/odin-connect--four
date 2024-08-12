@@ -1,3 +1,4 @@
+require "pry-byebug"
 require_relative "cell"
 
 # game class for the connect four game
@@ -5,7 +6,6 @@ class ConnectFour
   def initialize
     @game_board = create_board
     @moves_played = 0
-    @last_move = nil
   end
 
   def print_board
@@ -36,12 +36,20 @@ class ConnectFour
 
   def play_game
     # give introduction (Colored HEREDOC?)
+    # ask for starting color (blue or orange)
     # print board
     # start game loop:
-    # -> check for winning combinations or a tie
+    # -> check for 4-connections after each move and announce them
+    #   -> e.g.: if blue wins; "Blue is the winner!"
     # -> ask player 1 for target column
     # -> validate it, drop the cell, set as last move & add 1 to moves
-    # - >same for player 2 ^
+    # -> same for player 2 ^
+  end
+
+  def play_turn(cell, column)
+    # get user input for column
+    drop_cell(cell, column)
+    @moves_played += 1
   end
 
   def drop_cell(cell, column)
@@ -59,8 +67,25 @@ class ConnectFour
     end
   end
 
-  # def check_connections
-  # end
+  def check_four_horizontal
+    @game_board.each do |row|
+      next if row.all?(&:nil?)
+      next unless row[3].instance_of?(Cell)
+
+      current_color = row[3].color
+
+      if row[..3].all? { |el| el.instance_of?(Cell) }
+        left_color_check = row[0..3].all? { |cell| cell.color == current_color }
+        return current_color if left_color_check
+      end
+
+      if row[3..].all? { |el| el.instance_of?(Cell) }
+        left_color_check = row[3..].all? { |cell| cell.color == current_color }
+        return current_color if left_color_check
+      end
+    end
+    false
+  end
 
   def out_of_bounds?(row, column)
     row -= 1

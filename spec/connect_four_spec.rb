@@ -193,4 +193,53 @@ RSpec.describe ConnectFour do
       end
     end
   end
+
+  describe "#check_four_horizontal" do
+    subject(:connect_four) { described_class.new }
+
+    context "when there are four same-color cells connected" do
+      it "returns orange" do
+        orange_cell = connect_four.create_cell("orange")
+        4.times do |time|
+          connect_four.drop_cell(orange_cell, time + 1)
+        end
+
+        winning_color = connect_four.check_four_horizontal
+        expect(winning_color).to eq("orange")
+      end
+
+      it "returns blue" do
+        blue_cell = connect_four.create_cell("blue")
+        4.times do |time|
+          connect_four.drop_cell(blue_cell, time + 4)
+        end
+
+        winning_color = connect_four.check_four_horizontal
+        expect(winning_color).to eq("blue")
+      end
+    end
+
+    context "when there are no same-color cells connected" do
+      it "returns false" do
+        single_cell = connect_four.create_cell("blue")
+        connect_four.drop_cell(single_cell, 4)
+
+        single_check = connect_four.check_four_horizontal
+        expect(single_check).to be false
+      end
+    end
+  end
+
+  # describe "check_four_vertical" do
+  #   subject(:connect_four) { described_class.new }
+
+  #   context "when there are four same-color cells connected" do
+  #     it "returns blue"
+  #     it "returns orange"
+  #   end
+
+  #   context "when there are no same-color cells connected" do
+  #     it "returns false"
+  #   end
+  # end
 end
