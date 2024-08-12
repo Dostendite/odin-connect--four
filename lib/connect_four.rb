@@ -1,8 +1,11 @@
 require "pry-byebug"
 require_relative "cell"
+require_relative "display"
 
 # game class for the connect four game
 class ConnectFour
+  include Display
+
   def initialize
     @game_board = create_board
     @moves_played = 0
@@ -22,8 +25,7 @@ class ConnectFour
       end
       puts
     end
-    puts Rainbow("1 2 3 4 5 6 7").gray
-    puts "-------------\n"
+    puts Rainbow("1 2 3 4 5 6 7\n").gray
   end
 
   def create_board
@@ -35,6 +37,7 @@ class ConnectFour
   end
 
   def play_game
+    display_welcome_message
     # give introduction (Colored HEREDOC?)
     # ask for starting color (blue or orange)
     # print board
@@ -65,6 +68,18 @@ class ConnectFour
         base_row -= 1
       end
     end
+  end
+
+  def check_four_victory
+    checks = []
+    checks << check_four_horizontal
+    checks << check_four_vertical
+    checks << check_four_diagonal
+
+    checks.each do |check|
+      return check if check
+    end
+    false
   end
 
   def check_four_horizontal

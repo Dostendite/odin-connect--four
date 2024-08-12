@@ -335,4 +335,29 @@ RSpec.describe ConnectFour do
       end
     end
   end
+
+  describe "check_four_victory" do
+    subject(:connect_four) { described_class.new }
+
+    before do
+      allow(connect_four).to receive(:check_four_horizontal)
+      allow(connect_four).to receive(:check_four_vertical)
+      allow(connect_four).to receive(:check_four_diagonal)
+    end
+
+    it "calls check_four_horizontal" do
+      expect(connect_four).to receive(:check_four_horizontal)
+      connect_four.check_four_victory
+    end
+
+    it "calls check_four_vertical" do
+      expect(connect_four).to receive(:check_four_vertical)
+      connect_four.check_four_victory
+    end
+
+    it "calls check_four_diagonal" do
+      expect(connect_four).to receive(:check_four_diagonal)
+      connect_four.check_four_victory
+    end
+  end
 end
