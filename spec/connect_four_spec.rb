@@ -1,3 +1,5 @@
+require "pry-byebug"
+
 require_relative "../lib/connect_four"
 require_relative "../lib/cell"
 
@@ -86,6 +88,108 @@ RSpec.describe ConnectFour do
         target_column = 8
         bounds_test = connect_four.out_of_bounds?(target_row, target_column)
         expect(bounds_test).to be true
+      end
+    end
+  end
+
+  describe "#drop_cell" do
+    subject(:connect_four) { described_class.new }
+
+    context "when there are no cells below" do
+      it "drops the cell into the column 4" do
+        target_row = 6
+        target_column = 4
+
+        test_cell = connect_four.create_cell("blue")
+        connect_four.drop_cell(test_cell, target_column)
+
+        game_board = connect_four.instance_variable_get(:@game_board)
+        target_space = game_board[target_row - 1][target_column - 1]
+
+        expect(target_space).to eq(test_cell)
+      end
+
+      it "drops the cell into the column 6" do
+        target_row = 6
+        target_column = 6
+
+        test_cell = connect_four.create_cell("orange")
+        connect_four.drop_cell(test_cell, target_column)
+
+        game_board = connect_four.instance_variable_get(:@game_board)
+        target_space = game_board[target_row - 1][target_column - 1]
+
+        expect(target_space).to eq(test_cell)
+      end
+    end
+
+    context "when there is a cell below" do
+      it "drops the cell into the row above [5, 4]" do
+        target_row = 5
+        target_column = 4
+
+        test_cell = connect_four.create_cell("orange")
+        test_cell_two = connect_four.create_cell("blue")
+
+        connect_four.drop_cell(test_cell, target_column)
+        connect_four.drop_cell(test_cell_two, target_column)
+
+        game_board = connect_four.instance_variable_get(:@game_board)
+        target_space = game_board[target_row - 1][target_column - 1]
+
+        expect(target_space).to eq(test_cell_two)
+      end
+
+      it "drops the cell into the row above [5, 7]" do
+        target_row = 5
+        target_column = 7
+
+        test_cell = connect_four.create_cell("orange")
+        test_cell_two = connect_four.create_cell("blue")
+
+        connect_four.drop_cell(test_cell, target_column)
+        connect_four.drop_cell(test_cell_two, target_column)
+
+        game_board = connect_four.instance_variable_get(:@game_board)
+        target_space = game_board[target_row - 1][target_column - 1]
+
+        expect(target_space).to eq(test_cell_two)
+      end
+    end
+
+    context "when there are three cells below" do
+      it "drops the cell into the row above [3, 3]" do
+        target_row = 3
+        target_column = 3
+
+        3.times do
+          connect_four.drop_cell(connect_four.create_cell("orange"), target_column)
+        end
+
+        test_cell = connect_four.create_cell("blue")
+        connect_four.drop_cell(test_cell, target_column)
+
+        game_board = connect_four.instance_variable_get(:@game_board)
+        target_space = game_board[target_row - 1][target_column - 1]
+
+        expect(target_space).to eq(test_cell)
+      end
+
+      it "drops the cell into the row above [3, 7]" do
+        target_row = 3
+        target_column = 7
+
+        3.times do
+          connect_four.drop_cell(connect_four.create_cell("orange"), target_column)
+        end
+
+        test_cell = connect_four.create_cell("blue")
+        connect_four.drop_cell(test_cell, target_column)
+
+        game_board = connect_four.instance_variable_get(:@game_board)
+        target_space = game_board[target_row - 1][target_column - 1]
+
+        expect(target_space).to eq(test_cell)
       end
     end
   end
