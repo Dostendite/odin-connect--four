@@ -87,6 +87,28 @@ class ConnectFour
     false
   end
 
+  def check_four_vertical
+    @game_board.each_with_index do |row, row_idx|
+      next if row.all?(&:nil?)
+
+      row.each_with_index do |element, column|
+        next unless element.instance_of?(Cell)
+
+        current_color = element.color
+        score = 1
+        loop do
+          row_idx += 1
+          break if row_idx > 3 && score < 2
+          return current_color if score == 4
+          break unless @game_board[row_idx][column].color == current_color
+
+          score += 1
+        end
+      end
+    end
+    false
+  end
+
   def out_of_bounds?(row, column)
     row -= 1
     column -= 1

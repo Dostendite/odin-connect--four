@@ -200,22 +200,22 @@ RSpec.describe ConnectFour do
     context "when there are four same-color cells connected" do
       it "returns orange" do
         orange_cell = connect_four.create_cell("orange")
-        4.times do |time|
-          connect_four.drop_cell(orange_cell, time + 1)
+        4.times do |column|
+          connect_four.drop_cell(orange_cell, column + 1)
         end
 
-        winning_color = connect_four.check_four_horizontal
-        expect(winning_color).to eq("orange")
+        horizontal_check = connect_four.check_four_horizontal
+        expect(horizontal_check).to eq("orange")
       end
 
       it "returns blue" do
         blue_cell = connect_four.create_cell("blue")
-        4.times do |time|
-          connect_four.drop_cell(blue_cell, time + 4)
+        4.times do |column|
+          connect_four.drop_cell(blue_cell, column + 4)
         end
 
-        winning_color = connect_four.check_four_horizontal
-        expect(winning_color).to eq("blue")
+        horizontal_check = connect_four.check_four_horizontal
+        expect(horizontal_check).to eq("blue")
       end
     end
 
@@ -230,16 +230,43 @@ RSpec.describe ConnectFour do
     end
   end
 
-  # describe "check_four_vertical" do
-  #   subject(:connect_four) { described_class.new }
+  describe "check_four_vertical" do
+    subject(:connect_four) { described_class.new }
 
-  #   context "when there are four same-color cells connected" do
-  #     it "returns blue"
-  #     it "returns orange"
-  #   end
+    context "when there are four same-color cells connected" do
+      it "returns blue" do
+        target_column = 4
+        blue_cell = connect_four.create_cell("blue")
 
-  #   context "when there are no same-color cells connected" do
-  #     it "returns false"
-  #   end
-  # end
+        4.times do
+          connect_four.drop_cell(blue_cell, target_column)
+        end
+
+        vertical_check = connect_four.check_four_vertical
+        expect(vertical_check).to eq("blue")
+      end
+
+      it "returns orange" do
+        target_column = 4
+        orange_cell = connect_four.create_cell("orange")
+
+        4.times do
+          connect_four.drop_cell(orange_cell, target_column)
+        end
+
+        vertical_check = connect_four.check_four_vertical
+        expect(vertical_check).to eq("orange")
+      end
+    end
+
+    context "when there are no same-color cells connected" do
+      it "returns false" do
+        single_cell = connect_four.create_cell("blue")
+        connect_four.drop_cell(single_cell, 6)
+
+        single_check = connect_four.check_four_vertical
+        expect(single_check).to be false
+      end
+    end
+  end
 end
