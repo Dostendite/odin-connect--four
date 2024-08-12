@@ -17,15 +17,39 @@ connect_four = ConnectFour.new
 blue_cell = connect_four.create_cell("blue")
 orange_cell = connect_four.create_cell("orange")
 
-4.times do
-  connect_four.drop_cell(blue_cell, 2)
+blue_cell = connect_four.create_cell("blue")
+
+amount = 1
+column_count = 6
+
+3.times do
+  amount.times do
+    connect_four.drop_cell(blue_cell, column_count)
+  end
+  amount += 1
+  column_count -= 1
 end
 
-2.times do
-  connect_four.drop_cell(orange_cell, 3)
+orange_cell = connect_four.create_cell("orange")
+4.upto(7) do |column|
+  connect_four.drop_cell(orange_cell, column)
 end
 
-check = connect_four.check_four_vertical
+# right to left ^
+
+# 5.downto(3) do |column|
+#   (column - 2).times do
+#     connect_four.drop_cell(orange_cell, column)
+#   end
+# end
+
+# blue_cell = connect_four.create_cell("blue")
+
+# 5.downto(2) do |column|
+#   connect_four.drop_cell(blue_cell, column)
+# end
+
+check = connect_four.check_four_diagonal
 puts "winner is #{check}"
 
 connect_four.print_board

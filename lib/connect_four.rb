@@ -91,7 +91,7 @@ class ConnectFour
     @game_board.each_with_index do |row, row_idx|
       next if row.all?(&:nil?)
 
-      row.each_with_index do |element, column|
+      row.each_with_index do |element, column_idx|
         next unless element.instance_of?(Cell)
 
         current_color = element.color
@@ -100,7 +100,7 @@ class ConnectFour
           row_idx += 1
           break if row_idx > 3 && score < 2
           return current_color if score == 4
-          break unless @game_board[row_idx][column].color == current_color
+          break unless @game_board[row_idx][column_idx].color == current_color
 
           score += 1
         end
@@ -109,15 +109,62 @@ class ConnectFour
     false
   end
 
+  def check_four_diagonal
+    @game_board.each_with_index do |row, row_idx|
+      next if row.all?(&:nil?)
+
+      row.each_with_index do |element, column_idx|
+        next unless element.instance_of?(Cell)
+
+        left_check = four_diagonal_left?(element.color, row_idx, column_idx)
+        right_check = four_diagonal_right?(element.color, row_idx, column_idx)
+        return element.color if left_check || right_check
+      end
+    end
+    false
+  end
+
   def out_of_bounds?(row, column)
-    row -= 1
-    column -= 1
-    (row > 5 || column > 6) || (row < 1 || column < 1)
+    (row > 5 || column > 6) || (row.negative? || column.negative?)
+  end
+
+  private
+
+  def four_diagonal_left?(current_color, row, column)
+    score = 1
+    loop do
+      return true if score == 4
+
+      row += 1
+      column -= 1
+      break if out_of_bounds?(row, column)
+      break if @game_board[row][column].nil?
+      break if @game_board[row][column].color != current_color
+
+      score += 1
+    end
+    false
+  end
+
+  def four_diagonal_right?(current_color, row, column)
+    score = 1
+    loop do
+      return true if score == 4
+
+      row += 1
+      column += 1
+      break if out_of_bounds?(row, column)
+      break if @game_board[row][column].nil?
+      break if @game_board[row][column].color != current_color
+
+      score += 1
+    end
+    false
   end
 end
 
 # when winner connects four, the connected four BECOME A RAINBOW
-# after that, let the player decide if they want to restart
+# after that animation, let the player decide if they want to restart
 
 # def cololize(string)
 #   colorizer = Lolize::Colorizer.new

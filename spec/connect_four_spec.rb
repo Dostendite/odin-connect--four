@@ -1,4 +1,5 @@
 require "pry-byebug"
+require "rainbow"
 
 require_relative "../lib/connect_four"
 require_relative "../lib/cell"
@@ -52,22 +53,22 @@ RSpec.describe ConnectFour do
   describe "#out_of_bounds?" do
     subject(:connect_four) { described_class.new }
 
-    context "when the row or column are below 1" do
-      it "returns true when the row is below 1" do
-        target_row = 0
+    context "when the row and/or column are negative" do
+      it "returns true" do
+        target_row = -1
         target_column = 5
         bounds_test = connect_four.out_of_bounds?(target_row, target_column)
         expect(bounds_test).to be true
       end
 
-      it "returns true when the column is below 1" do
+      it "returns true" do
         target_row = 3
         target_column = -2
         bounds_test = connect_four.out_of_bounds?(target_row, target_column)
         expect(bounds_test).to be true
       end
 
-      it "returns true when both are below 1" do
+      it "returns true" do
         target_row = -5
         target_column = -2
         bounds_test = connect_four.out_of_bounds?(target_row, target_column)
@@ -75,17 +76,24 @@ RSpec.describe ConnectFour do
       end
     end
 
-    context "when the row or column are positive" do
-      it "returns true when row is higher than 6" do
+    context "when the row and/or column are positive" do
+      it "returns true" do
         target_row = 7
         target_column = 3
         bounds_test = connect_four.out_of_bounds?(target_row, target_column)
         expect(bounds_test).to be true
       end
 
-      it "returns true when column is higher than 7" do
+      it "returns true" do
         target_row = 5
         target_column = 8
+        bounds_test = connect_four.out_of_bounds?(target_row, target_column)
+        expect(bounds_test).to be true
+      end
+
+      it "returns true" do
+        target_row = 6
+        target_column = 7
         bounds_test = connect_four.out_of_bounds?(target_row, target_column)
         expect(bounds_test).to be true
       end
@@ -266,6 +274,64 @@ RSpec.describe ConnectFour do
 
         single_check = connect_four.check_four_vertical
         expect(single_check).to be false
+      end
+    end
+  end
+
+  describe "#check_four_diagonal" do
+    subject(:connect_four) { described_class.new }
+
+    context "when there are four same-color cells connected" do
+      it "returns blue" do
+        orange_cell = connect_four.create_cell("orange")
+
+        5.downto(3) do |column|
+          (column - 2).times do
+            connect_four.drop_cell(orange_cell, column)
+          end
+        end
+
+        blue_cell = connect_four.create_cell("blue")
+
+        5.downto(2) do |column|
+          connect_four.drop_cell(blue_cell, column)
+        end
+
+        diagonal_check = connect_four.check_four_diagonal
+        expect(diagonal_check).to eq("blue")
+      end
+
+      it "returns orange" do
+        blue_cell = connect_four.create_cell("blue")
+
+        amount = 1
+        column_count = 6
+
+        3.times do
+          amount.times do
+            connect_four.drop_cell(blue_cell, column_count)
+          end
+          amount += 1
+          column_count -= 1
+        end
+
+        orange_cell = connect_four.create_cell("orange")
+        4.upto(7) do |column|
+          connect_four.drop_cell(orange_cell, column)
+        end
+
+        diagonal_check = connect_four.check_four_diagonal
+        expect(diagonal_check).to eq("orange")
+      end
+    end
+
+    context "when there are no same-color cells connected" do
+      it "returns false" do
+        single_cell = connect_four.create_cell("blue")
+        connect_four.drop_cell(single_cell, 4)
+
+        diagonal_check = connect_four.check_four_diagonal
+        expect(diagonal_check).to be false
       end
     end
   end
