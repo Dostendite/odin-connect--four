@@ -9,6 +9,7 @@ class ConnectFour
   def initialize
     @game_board = create_board
     @moves_played = 0
+    @first_cell = nil
   end
 
   def print_board
@@ -37,9 +38,11 @@ class ConnectFour
   end
 
   def play_game
-    display_welcome_message
-    # give introduction (Colored HEREDOC?)
-    # ask for starting color (blue or orange)
+    display_introduction
+    prompt_starting_color
+
+    # loop do
+    print_board
     # print board
     # start game loop:
     # -> check for 4-connections after each move and announce them
@@ -47,6 +50,23 @@ class ConnectFour
     # -> ask player 1 for target column
     # -> validate it, drop the cell, set as last move & add 1 to moves
     # -> same for player 2 ^
+  end
+
+  def display_introduction
+    clear_screen
+    print_welcome_message
+    $stdin.getch
+    clear_screen
+  end
+
+  def prompt_starting_color
+    blue_cell = create_cell("blue")
+    orange_cell = create_cell("orange")
+    puts "Choose starting cell color"
+    puts "Blue -> #{blue_cell} || Orange -> #{orange_cell}\n"
+    puts
+    @first_cell = ask_starting_color
+    clear_screen
   end
 
   def play_turn(cell, column)
@@ -59,15 +79,21 @@ class ConnectFour
     # out of bounds check is done
     # before this method is ever called
     base_row = 5
-    column -= 1
     loop do
-      if @game_board[base_row][column].nil?
-        @game_board[base_row][column] = cell
+      if @game_board[base_row][column - 1].nil?
+        @game_board[base_row][column - 1] = cell
         break
       else
         base_row -= 1
       end
     end
+  end
+
+  def full_column?(column)
+    @game_board.each_index do |row|
+      return false if @game_board[row][column].nil?
+    end
+    true
   end
 
   def check_four_victory
@@ -144,6 +170,20 @@ class ConnectFour
   end
 
   private
+
+  def clear_screen
+    puts `clear`
+  end
+
+  def ask_starting_color
+    loop do
+      color_choice = gets.strip.downcase
+      return "b" if color_choice[0] == "b"
+      return "o" if color_choice[0] == "o"
+
+      puts "Wrong input! Please enter 'blue' or 'orange'"
+    end
+  end
 
   def four_diagonal_left?(current_color, row, column)
     score = 1
