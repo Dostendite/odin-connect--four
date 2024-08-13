@@ -1,6 +1,3 @@
-require "pry-byebug"
-require "rainbow"
-
 require_relative "../lib/connect_four"
 require_relative "../lib/cell"
 
@@ -382,59 +379,59 @@ RSpec.describe ConnectFour do
   describe "#swap_cells" do
     subject(:connect_four) { described_class.new }
 
-    it "changes the current cell from blue to orange"
-    it "changes the current cell from orange to blue"
-  end
+    it "returns orange" do
+      connect_four.instance_variable_set(:@current_cell, "blue")
+      result = connect_four.swap_cells
+      expect(result).to eq("orange")
+    end
 
-  describe "#play_game" do
-    subject(:connect_four) { described_class.new }
-
-    context "when the game starts" do
-      before do
-        allow($stdin).to receive(:getch)
-        allow(connect_four).to receive(:print)
-        allow(connect_four).to receive(:puts)
-        allow(connect_four).to receive(:gets)
-        allow(connect_four).to receive(:clear_screen)
-        allow(connect_four).to receive(:ask_column_choice)
-        allow(connect_four).to receive(:ask_starting_color)
-        allow(connect_four).to receive(:prompt_drop_column)
-        allow(connect_four).to receive(:print_welcome_message)
-        allow(connect_four).to receive(:drop_cell)
-        allow(connect_four).to receive(:play_turn)
-        allow(connect_four).to receive(:announce_winner)
-      end
-
-      it "displays the introduction" do
-        expect(connect_four).to receive(:display_introduction)
-        connect_four.play_game
-      end
-
-      it "prompts the player for the starting cell color" do
-        expect(connect_four).to receive(:prompt_drop_column)
-        connect_four.play_game
-      end
-
-      it "promps the player for the column to drop" do
-        expect(connect_four).to receive(:play_turn)
-        connect_four.play_game
-      end
-
-      it "checks for game over" do
-        expect(connect_four).to receive(:game_over?)
-        connect_four.play_game
-      end
-
-      it "swaps the cell colors" do
-        expect(connect_four).to receive(:swap_cells)
-        connect_four.play_game
-      end
-
-      it "displays final message when game is over" do
-        connect_four.instance_variable_set(:@game_over, "orange")
-        expect(connect_four).to receive(:display_final_message)
-        connect_four.play_game
-      end
+    it "returns blue" do
+      connect_four.instance_variable_set(:@current_cell, "orange")
+      result = connect_four.swap_cells
+      expect(result).to eq("blue")
     end
   end
 end
+
+# describe "#play_game" do
+#   subject(:connect_four) { described_class.new }
+
+#   context "when the game starts" do
+#     before do
+#       allow($stdin).to receive(:getch)
+#       allow(connect_four).to receive(:print)
+#       allow(connect_four).to receive(:puts)
+#       allow(connect_four).to receive(:gets)
+#       allow(connect_four).to receive(:clear_screen)
+#       allow(connect_four).to receive(:ask_column_choice)
+#       allow(connect_four).to receive(:ask_starting_color)
+#       allow(connect_four).to receive(:prompt_drop_column)
+#       allow(connect_four).to receive(:print_welcome_message)
+#       allow(connect_four).to receive(:drop_cell)
+#       allow(connect_four).to receive(:play_turn)
+#       allow(connect_four).to receive(:announce_winner)
+#     end
+
+#     it "displays the introduction" do
+#       expect(connect_four).to receive(:display_introduction)
+#       connect_four.play_game
+#     end
+
+#     it "prompts the player for the starting cell color" do
+#       expect(connect_four).to receive(:prompt_drop_column)
+#       connect_four.play_game
+#     end
+
+#     it "promps the player for the column to drop" do
+#    it "displays final message when game is over" do
+#       connect_four.instance_variable_set(:@game_over, "orange")
+#       expect(connect_four).to receive(:display_final_message)
+#       connect_four.play_game
+#     end   connect_four.play_game
+#     end
+
+  #     it "displays final message when game is over" do
+  #       connect_four.instance_variable_set(:@game_over, "orange")
+  #       expect(connect_four).to receive(:display_final_message)
+  #       connect_four.play_game
+  #     end

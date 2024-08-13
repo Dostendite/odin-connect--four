@@ -1,4 +1,3 @@
-require "pry-byebug"
 require_relative "cell"
 require_relative "display"
 
@@ -15,6 +14,7 @@ class ConnectFour
   end
 
   def print_board
+    clear_screen
     @game_board.each do |row|
       row.each do |element|
         print Rainbow("⚫").white if element.nil?
@@ -44,7 +44,6 @@ class ConnectFour
     prompt_starting_color
 
     until @game_over
-      clear_screen
       print_board
       drop_column = prompt_drop_column
       play_turn(@current_cell, drop_column)
@@ -232,6 +231,12 @@ class ConnectFour
   def ask_column_choice
     loop do
       column_choice = gets.strip.to_i
+
+      if full_column?(column_choice - 1)
+        puts "Column is full! Enter a number from 1 to 7"
+        next
+      end
+
       return column_choice if (1..7).include?(column_choice)
 
       puts "Wrong input! Please enter a number from 1 to 7"
