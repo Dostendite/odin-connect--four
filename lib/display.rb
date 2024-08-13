@@ -6,14 +6,27 @@ module Display
 
       If you like it you can find me as dostendite on GitHub!
 
-      Press any key to continue... 
+      Press any key to continue...
     HEREDOC
     print welcome_message
   end
 
+  def print_final_message_tie
+    final_message_tie = <<~HEREDOC
+      It looks like there was a tie this time !
+
+      Thanks for playing <3
+
+      Fun fact: You placed 42 pieces :D
+
+      if you want to restart... You can reload with F5 >:3
+    HEREDOC
+    print final_message_tie
+  end
+
   def print_final_message(color)
     final_message = <<~HEREDOC
-      It looks like the #{color} cells won this time!
+      It looks like the #{color} pieces won this time!
 
       Thank you for playing <3
 
