@@ -8,8 +8,10 @@ class ConnectFour
 
   def initialize
     @game_board = create_board
+    @game_over = false
     @moves_played = 0
-    @first_cell = nil
+    @current_cell = nil
+    @winning_color = nil
   end
 
   def print_board
@@ -41,22 +43,63 @@ class ConnectFour
     display_introduction
     prompt_starting_color
 
-    # loop do
-    print_board
-    # print board
-    # start game loop:
-    # -> check for 4-connections after each move and announce them
-    #   -> e.g.: if blue wins; "Blue is the winner!"
-    # -> ask player 1 for target column
-    # -> validate it, drop the cell, set as last move & add 1 to moves
-    # -> same for player 2 ^
+    until @game_over
+      clear_screen
+      print_board
+      drop_column = prompt_drop_column
+      play_turn(@current_cell, drop_column)
+      game_over?
+      @current_cell = swap_cells
+    end
+
+    display_final_message
+  end
+
+  def game_over?
+    @winning_color = check_four_victory
+    return false if @winning_color == false
+
+    @game_over = true
+  end
+
+  def display_final_message
+    announce_winner
+    clear_screen
+
+    if @winning_color == "tie"
+      print_final_message_tie
+      return
+    end
+
+    print_final_message(@current_cell) if @winning_color
   end
 
   def display_introduction
     clear_screen
     print_welcome_message
+    puts
     $stdin.getch
     clear_screen
+  end
+
+  def swap_cells
+    if @current_cell == "blue"
+      "orange"
+    else
+      "blue"
+    end
+  end
+
+  def prompt_drop_column
+    print "Enter column to drop your "
+    if @current_cell == "blue"
+      print Rainbow("⚫").color("#0A8AF2").bright
+    else
+      print Rainbow("⚫").color("#F2970A").bright
+    end
+    print "piece [1-7]"
+    puts
+    ask_column_choice
   end
 
   def prompt_starting_color
@@ -65,19 +108,17 @@ class ConnectFour
     puts "Choose starting cell color"
     puts "Blue -> #{blue_cell} || Orange -> #{orange_cell}\n"
     puts
-    @first_cell = ask_starting_color
+    @current_cell = ask_starting_color
     clear_screen
   end
 
-  def play_turn(cell, column)
-    # get user input for column
-    drop_cell(cell, column)
+  def play_turn(cell_color, column)
+    next_cell = create_cell(cell_color)
+    drop_cell(next_cell, column)
     @moves_played += 1
   end
 
   def drop_cell(cell, column)
-    # out of bounds check is done
-    # before this method is ever called
     base_row = 5
     loop do
       if @game_board[base_row][column - 1].nil?
@@ -97,6 +138,8 @@ class ConnectFour
   end
 
   def check_four_victory
+    return "tie" if @moves_played == 42
+
     checks = []
     checks << check_four_horizontal
     checks << check_four_vertical
@@ -171,15 +214,35 @@ class ConnectFour
 
   private
 
+  def announce_winner
+    clear_screen
+    print_board
+    if @winning_color == "tie"
+      puts "The game was a tie!"
+    else
+      puts "#{@winning_color} wins!".capitalize
+    end
+    sleep(2.5)
+  end
+
   def clear_screen
     puts `clear`
+  end
+
+  def ask_column_choice
+    loop do
+      column_choice = gets.strip.to_i
+      return column_choice if (1..7).include?(column_choice)
+
+      puts "Wrong input! Please enter a number from 1 to 7"
+    end
   end
 
   def ask_starting_color
     loop do
       color_choice = gets.strip.downcase
-      return "b" if color_choice[0] == "b"
-      return "o" if color_choice[0] == "o"
+      return "blue" if color_choice[0] == "b"
+      return "orange" if color_choice[0] == "o"
 
       puts "Wrong input! Please enter 'blue' or 'orange'"
     end

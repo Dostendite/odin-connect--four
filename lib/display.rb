@@ -13,13 +13,13 @@ module Display
 
   def print_final_message_tie
     final_message_tie = <<~HEREDOC
-      It looks like there was a tie this time !
+      It looks like there was a tie this time!
 
       Thanks for playing <3
 
       Fun fact: You placed 42 pieces :D
 
-      if you want to restart... You can reload with F5 >:3
+      if you want to restart... You can reload with F5 :3
     HEREDOC
     print final_message_tie
   end
@@ -30,7 +30,7 @@ module Display
 
       Thank you for playing <3
 
-      if you want to restart... You can reload with F5 >:3
+      if you want to restart... You can reload with F5 :3
     HEREDOC
     print final_message
   end

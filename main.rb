@@ -1,6 +1,7 @@
 require "rainbow"
 require "lolize"
 require_relative "lib/cell"
+require_relative "lib/display"
 require_relative "lib/connect_four"
 
 # Since this is probably your first experience with TDD, let's extend the
@@ -14,5 +15,4 @@ require_relative "lib/connect_four"
 # 7. Optional: Refactor your code and/or tests, keeping all tests passing.
 
 connect_four = ConnectFour.new
-connect_four.create_cell("orange")
 connect_four.play_game
