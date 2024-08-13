@@ -14,5 +14,5 @@ require_relative "lib/connect_four"
 # 7. Optional: Refactor your code and/or tests, keeping all tests passing.
 
 connect_four = ConnectFour.new
-cell = connect_four.create_cell("orange")
-# connect_four.play_game
+connect_four.create_cell("orange")
+connect_four.play_game

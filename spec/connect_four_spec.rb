@@ -100,6 +100,24 @@ RSpec.describe ConnectFour do
     end
   end
 
+  describe "#full_column?" do
+    subject(:connect_four) { described_class.new }
+    it "returns true" do
+      target_column = 3
+      blue_cell = connect_four.create_cell("blue")
+      6.times { connect_four.drop_cell(blue_cell, target_column + 1) }
+
+      result = connect_four.full_column?(target_column)
+      expect(result).to be true
+    end
+
+    it "returns false" do
+      target_column = 3
+      result = connect_four.full_column?(target_column - 1)
+      expect(result).to be false
+    end
+  end
+
   describe "#drop_cell" do
     subject(:connect_four) { described_class.new }
 
@@ -358,6 +376,31 @@ RSpec.describe ConnectFour do
     it "calls check_four_diagonal" do
       expect(connect_four).to receive(:check_four_diagonal)
       connect_four.check_four_victory
+    end
+  end
+
+  describe "#play_game" do
+    subject(:connect_four) { described_class.new }
+    context "when the game starts" do
+      before do
+        allow($stdin).to receive(:getch)
+        allow(connect_four).to receive(:print)
+        allow(connect_four).to receive(:puts)
+      end
+
+      it "displays the introduction" do
+        expect(connect_four).to receive(:print_welcome_message)
+        connect_four.play_game
+      end
+
+      it "prompts the player for the starting cell color" do
+        expect(connect_four).to receive(:prompt_starting_color)
+        connect_four.play_game
+      end
+
+      it "starts the game loop"
+      it "plays a turn"
+      it "breaks when the game is over"
     end
   end
 end
