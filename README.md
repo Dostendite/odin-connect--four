@@ -1,3 +1,11 @@
 # Ruby Connect Four for TOP
 
-This'll be my first TDD project!
+This was my first TDD project!
+
+## Possible improvements:
+
+* Maybe divide up the ConnectFour class into others?
+* Refactor the `print_board`, `check_four` methods and others
+* Add a rainbow animation to the connected four when a player win
+* Add replayability
+* Improve the aesthetics
