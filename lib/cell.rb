@@ -8,9 +8,9 @@ class Cell
 
   def to_s
     if @color == "blue"
-      Rainbow("⚫").color("#0A8AF2").bright
+      Rainbow("●").color("#0A8AF2").bright
     else
-      Rainbow("⚫").color("#F2970A").bright
+      Rainbow("●").color("#F2970A").bright
     end
   end
 end

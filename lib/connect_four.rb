@@ -17,14 +17,11 @@ class ConnectFour
     clear_screen
     @game_board.each do |row|
       row.each do |element|
-        print Rainbow("⚫").white if element.nil?
+        print Rainbow("●").white if element.nil?
         if element.instance_of?(Cell)
-          if element.color == "blue"
-            print Rainbow("⚫").color("#0A8AF2").bright
-          else
-            print Rainbow("⚫").color("#F2970A").bright
-          end
+          print element
         end
+        print " "
       end
       puts
     end
@@ -69,7 +66,6 @@ class ConnectFour
       print_final_message_tie
       return
     end
-
     print_final_message(@current_cell) if @winning_color
   end
 
@@ -92,11 +88,11 @@ class ConnectFour
   def prompt_drop_column
     print "Enter column to drop your "
     if @current_cell == "blue"
-      print Rainbow("⚫").color("#0A8AF2").bright
+      print Rainbow("●").color("#0A8AF2").bright
     else
-      print Rainbow("⚫").color("#F2970A").bright
+      print Rainbow("●").color("#F2970A").bright
     end
-    print "piece [1-7]"
+    print " piece [1-7]"
     puts
     ask_column_choice
   end
@@ -172,21 +168,30 @@ class ConnectFour
 
   def check_four_vertical
     @game_board.each_with_index do |row, row_idx|
-      next if row.all?(&:nil?)
+      next if row.all?(&:nil?) || row_idx > 2
 
       row.each_with_index do |element, column_idx|
         next unless element.instance_of?(Cell)
-
+        
         current_color = element.color
-        score = 1
-        loop do
-          row_idx += 1
-          break if row_idx > 3 && score < 2
-          return current_color if score == 4
-          break unless @game_board[row_idx][column_idx].color == current_color
+        cells_below = [@game_board[row_idx + 1][column_idx],
+                       @game_board[row_idx + 2][column_idx],
+                       @game_board[row_idx + 3][column_idx]]
 
-          score += 1
-        end
+        return current_color if cells_below.all? { |cell| cell.color == current_color }
+  
+      # Old Algorithm (Find out why it didn't work)
+      #   puts "Scanning cell #{element} at #{row_idx}, #{column_idx} | score -> #{score}"
+      #   loop do
+      #     row_idx += 1
+      #     break if row_idx > 3 && score < 2
+
+      #     return current_color if score == 4
+      #     puts "Color below -> #{@game_board[row_idx][column_idx]}"
+      #     break unless @game_board[row_idx][column_idx].color == current_color
+
+      #     score += 1
+      #   end
       end
     end
     false
@@ -225,7 +230,7 @@ class ConnectFour
   end
 
   def clear_screen
-    puts `clear`
+    print `clear`
   end
 
   def ask_column_choice

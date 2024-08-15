@@ -1,3 +1,4 @@
+require "io/console"
 require "rainbow"
 require "lolize"
 require_relative "lib/cell"
