@@ -1,7 +1,8 @@
 # Ruby Connect Four for TOP
 
-🔰 [**Live Preview**](https://replit.com/@skimgus12/odin-connect-four)
 This was my first TDD project!
+
+🔰 [**Live Preview**](https://replit.com/@skimgus12/odin-connect-four)
 
 ## Possible improvements:
 
