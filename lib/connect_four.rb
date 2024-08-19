@@ -36,15 +36,18 @@ class ConnectFour
     Cell.new(color)
   end
 
+  require "pry-byebug"
+
   def play_game
     display_introduction
     prompt_starting_color
 
-    until @game_over
+    loop do
       print_board
       drop_column = prompt_drop_column
       play_turn(@current_cell, drop_column)
-      game_over?
+      break if game_over?
+
       @current_cell = swap_cells
     end
 
