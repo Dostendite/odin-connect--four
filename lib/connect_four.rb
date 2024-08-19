@@ -36,8 +36,6 @@ class ConnectFour
     Cell.new(color)
   end
 
-  require "pry-byebug"
-
   def play_game
     display_introduction
     prompt_starting_color
